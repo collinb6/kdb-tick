@@ -1,0 +1,6 @@
+"kdb+tick 2.8 2014.03.12"
+'2022.05.07T14:11:17.998 tick/sym.q. OS reports: No such file or directory
+  [3]  \l tick/sym.q
+       ^
+  [2]  /Projects/kdb-tick/tick.q:23: system"l tick/",(src:first .z.x,enlist"sym"),".q"
+                                     ^

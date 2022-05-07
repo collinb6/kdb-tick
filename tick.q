@@ -20,10 +20,13 @@
 "kdb+tick 2.8 2014.03.12"
 
 /q tick.q SRC [DST] [-p 5010] [-o h]
+//// uses first argument to .z.x, or defaults to sym. This loads in the schema file under tick folder
 system"l tick/",(src:first .z.x,enlist"sym"),".q"
 
 if[not system"p";system"p 5010"]
 
+//// loads in utility functions in u.q
+//// this will define the .u variables/functions listed at the bottom
 \l tick/u.q
 \d .u
 ld:{if[not type key L::`$(-10_string L),string x;.[L;();:;()]];i::j::-11!(-2;L);if[0<=type i;-2 (string L)," is a corrupt log. Truncate to length ",(string last i)," and restart";exit 1];hopen L};
@@ -48,6 +51,7 @@ if[not system"t";system"t 1000";
 .u.tick[src;.z.x 1];
 
 \
+//// These .u globals are defined because tick.q loads in the u.q script
  globals used
  .u.w - dictionary of tables->(handle;syms)
  .u.i - msg count in log file
