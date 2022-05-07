@@ -1,3 +1,7 @@
+# Useful links
+https://www.qfordummies.com/knowledge-base/kdb-tick
+
+
 # kdb+tick
 
 Files previously at code.kx.com/wsvn/kx/kdb+tick

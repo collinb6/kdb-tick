@@ -1,3 +1,8 @@
+//// The arguments that are used when starting tick.q
+//// q tick.q sym ./tp_logs/ </dev/null> process_logs/tick 2>&1
+//// sym is the 
+
+
 / q tick.q sym . -p 5001 </dev/null >foo 2>&1 &
 /2014.03.12 remove license check
 /2013.09.05 warn on corrupt log
@@ -25,12 +30,35 @@ system"l tick/",(src:first .z.x,enlist"sym"),".q"
 
 if[not system"p";system"p 5010"]
 
+
 //// loads in utility functions in u.q
 //// this will define the .u variables/functions listed at the bottom
 \l tick/u.q
 \d .u
-ld:{if[not type key L::`$(-10_string L),string x;.[L;();:;()]];i::j::-11!(-2;L);if[0<=type i;-2 (string L)," is a corrupt log. Truncate to length ",(string last i)," and restart";exit 1];hopen L};
-tick:{init[];if[not min(`time`sym~2#key flip value@)each t;'`timesym];@[;`sym;`g#]each t;d::.z.D;if[l::count y;L::`$":",y,"/",x,10#".";l::ld d]};
+ld:{
+    if[not type key L::`$(-10_string L),string x;
+        .[L;();:;()]
+    ];
+    i::j::-11!(-2;L);
+    if[0<=type i;
+        -2 (string L)," is a corrupt log. Truncate to length ",(string last i)," and restart";
+        exit 1
+    ];
+    hopen L
+    };
+
+tick:{
+    init[];
+    if[not min(`time`sym~2#key flip value@)each t;
+        '`timesym
+    ];
+    @[;`sym;`g#]each t;
+    d::.z.D;
+    if[l::count y;
+        L::`$":",y,"/",x,10#".";
+        l::ld d
+    ]
+    };
 
 endofday:{end d;d+:1;if[l;hclose l;l::0(`.u.ld;d)]};
 ts:{if[d<x;if[d<x-1;system"t 0";'"more than one day?"];endofday[]]};
@@ -38,14 +66,29 @@ ts:{if[d<x;if[d<x-1;system"t 0";'"more than one day?"];endofday[]]};
 if[system"t";
  .z.ts:{pub'[t;value each t];@[`.;t;@[;`sym;`g#]0#];i::j;ts .z.D};
  upd:{[t;x]
+ .debug.upd:(t;x);
  if[not -16=type first first x;if[d<"d"$a:.z.P;.z.ts[]];a:"n"$a;x:$[0>type first x;a,x;(enlist(count first x)#a),x]];
  t insert x;if[l;l enlist (`upd;t;x);j+:1];}];
 
 if[not system"t";system"t 1000";
  .z.ts:{ts .z.D};
- upd:{[t;x]ts"d"$a:.z.P;
- if[not -16=type first first x;a:"n"$a;x:$[0>type first x;a,x;(enlist(count first x)#a),x]];
- f:key flip value t;pub[t;$[0>type first x;enlist f!x;flip f!x]];if[l;l enlist (`upd;t;x);i+:1];}];
+ upd:{[t;x]
+    show"1";
+    .debug.upd:(t;x);
+    ts"d"$a:.z.P;
+    if[not -16=type first first x;
+        a:"n"$a;
+        x:$[0>type first x;a,x;(enlist(count first x)#a),x]
+    ];
+    show"2";
+    f:key flip value t;
+    pub[t;$[0>type first x;enlist f!x;flip f!x]];
+    if[l;
+        l enlist (`upd;t;x);
+        i+:1
+    ];
+    }
+ ];
 
 \d .
 .u.tick[src;.z.x 1];
