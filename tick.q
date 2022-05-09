@@ -70,18 +70,19 @@ if[system"t";
  if[not -16=type first first x;if[d<"d"$a:.z.P;.z.ts[]];a:"n"$a;x:$[0>type first x;a,x;(enlist(count first x)#a),x]];
  t insert x;if[l;l enlist (`upd;t;x);j+:1];}];
 
-if[not system"t";system"t 1000";
+if[not system"t";
+ system"t 1000";
  .z.ts:{ts .z.D};
  upd:{[t;x]
-    show"1";
     .debug.upd:(t;x);
     ts"d"$a:.z.P;
     if[not -16=type first first x;
         a:"n"$a;
         x:$[0>type first x;a,x;(enlist(count first x)#a),x]
     ];
-    show"2";
     f:key flip value t;
+    .debug.b1:f;
+
     pub[t;$[0>type first x;enlist f!x;flip f!x]];
     if[l;
         l enlist (`upd;t;x);
